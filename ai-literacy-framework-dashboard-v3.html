@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Literacy Framework Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        h1, h2 { color: #2c3e50; }
+        .tab-buttons { display: flex; margin-bottom: 20px; }
+        .tab-button { padding: 10px 20px; margin-right: 10px; background-color: #f0f0f0; border: none; cursor: pointer; }
+        .tab-button.active { background-color: #3498db; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .chart-container { height: 400px; margin-bottom: 20px; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .card { background-color: #fff; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 20px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const AILiteracyDashboard = () => {
+            const [activeTab, setActiveTab] = useState(0);
+            const problemsChartRef = useRef(null);
+            const frameworkChartRef = useRef(null);
+
+            const problems = [
+                { name: 'Lack of Understanding', value: 85 },
+                { name: 'Misuse of AI Tools', value: 70 },
+                { name: 'Banning without Understanding', value: 60 },
+                { name: 'Academic Integrity Concerns', value: 90 },
+                { name: 'Overreliance on AI', value: 75 },
+                { name: 'Ethical Implications', value: 80 },
+                { name: 'Bias in AI Systems', value: 85 },
+                { name: 'Lack of Critical Evaluation', value: 75 },
+            ];
+
+            const literacyComponents = [
+                { name: 'Functional AI Literacy', value: 4 },
+                { name: 'Critical AI Literacy', value: 4 },
+                { name: 'Rhetorical AI Literacy', value: 5 },
+            ];
+
+            useEffect(() => {
+                if (activeTab === 0) {
+                    const ctx = problemsChartRef.current.getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: problems.map(p => p.name),
+                            datasets: [{
+                                label: 'Severity (%)',
+                                data: problems.map(p => p.value),
+                                backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            maintainAspectRatio: false,
+                        }
+                    });
+                } else if (activeTab === 2) {
+                    const ctx = frameworkChartRef.current.getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: literacyComponents.map(c => c.name),
+                            datasets: [{
+                                label: 'Number of Key Competencies',
+                                data: literacyComponents.map(c => c.value),
+                                backgroundColor: 'rgba(75, 192, 192, 0.8)',
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                        }
+                    });
+                }
+            }, [activeTab]);
+
+            const Card = ({ title, content }) => (
+                <div className="card">
+                    <h3>{title}</h3>
+                    <p>{content}</p>
+                </div>
+            );
+
+            return (
+                <div>
+                    <h1>AI Literacy Framework Dashboard</h1>
+                    
+                    <div className="tab-buttons">
+                        <button className={`tab-button ${activeTab === 0 ? 'active' : ''}`} onClick={() => setActiveTab(0)}>Problems Identified</button>
+                        <button className={`tab-button ${activeTab === 1 ? 'active' : ''}`} onClick={() => setActiveTab(1)}>Need for AI Literacy</button>
+                        <button className={`tab-button ${activeTab === 2 ? 'active' : ''}`} onClick={() => setActiveTab(2)}>AI Literacy Framework</button>
+                    </div>
+
+                    <div className={`tab-content ${activeTab === 0 ? 'active' : ''}`}>
+                        <h2>Problems Identified in Higher Education</h2>
+                        <div className="chart-container">
+                            <canvas ref={problemsChartRef}></canvas>
+                        </div>
+                    </div>
+
+                    <div className={`tab-content ${activeTab === 1 ? 'active' : ''}`}>
+                        <h2>The Need for AI Literacy</h2>
+                        <div className="card-grid">
+                            <Card
+                                title="Comprehension of AI Systems"
+                                content="Understanding AI capabilities, limitations, and ethical considerations."
+                            />
+                            <Card
+                                title="Informed Decision Making"
+                                content="Making knowledgeable choices about AI use in academic contexts."
+                            />
+                            <Card
+                                title="Ethical Interaction"
+                                content="Developing skills to interact with AI technologies ethically and responsibly."
+                            />
+                            <Card
+                                title="Preparation for AI-Infused Workforce"
+                                content="Equipping students for a future where AI is integral to many professions."
+                            />
+                        </div>
+                    </div>
+
+                    <div className={`tab-content ${activeTab === 2 ? 'active' : ''}`}>
+                        <h2>AI Literacy Framework Components</h2>
+                        <div className="chart-container">
+                            <canvas ref={frameworkChartRef}></canvas>
+                        </div>
+                        <div className="card-grid">
+                            <Card
+                                title="Functional AI Literacy"
+                                content="Understanding core AI mechanisms, capabilities, limitations, and effective interaction with AI interfaces."
+                            />
+                            <Card
+                                title="Critical AI Literacy"
+                                content="Evaluating AI credibility, recognizing biases, mitigating issues, and considering ethical implications."
+                            />
+                            <Card
+                                title="Rhetorical AI Literacy"
+                                content="Analyzing AI-generated content, understanding AI's role in communication, and collaborating effectively with AI tools."
+                            />
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<AILiteracyDashboard />, document.getElementById('root'));
+    </script>
+</body>
+</html>
